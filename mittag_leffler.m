@@ -11,14 +11,15 @@ function e = mittag_leffler(alpha, beta, z, rho)
 %	The Generalized Mittag-Leffler function is defined as
 %   E_{alpha, beta}(z) = sum k from 0 to inf of Z^k/gamma(alpha*k + beta)
 %
-%   Author: Yang Zongze
-%   E-mail: yangzongze@gmail.com
-%
 %   Reference: 
 %       (1) Rudolf Gorenflo, Yuri Luchko, and Joulia Loutchko
 %           Computation of the Mittag-Leffler function and its derivatives.
 %           Fractional Calculus & Applied Analysis. 2002, 5(4):12-15.
 %       (2) MLF (alpha,beta,Z,P) written by Igor Podlubny, Martin Kacenak.
+%
+%   Author: Yang Zongze
+%   E-mail: yangzognze@gmail.com
+%   Date: 2016-12-14
 
     if nargin <3
         error('mittag_leffler::Not enough input arguments.');
