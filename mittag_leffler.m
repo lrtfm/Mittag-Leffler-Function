@@ -1,6 +1,6 @@
 function e = mittag_leffler(alpha, beta, z, rho)
 % MITTAG_LEFFLER   Generalized Mittag-Leffler function.
-%	E = mittag_leffler(alpha, beta, z) evaluates the Mittag-Leffler 
+%   E = mittag_leffler(alpha, beta, z) evaluates the Mittag-Leffler 
 %   function for each element of z with parameters alpha and beta, where
 %   alpha, beta are real scalars and alpha > 0.
 %
@@ -8,7 +8,7 @@ function e = mittag_leffler(alpha, beta, z, rho)
 %   function with accuracy rho. Other parameters are same as before. The 
 %   default value of rho is 10^(-12).
 %
-%	The Generalized Mittag-Leffler function is defined as
+%   The Generalized Mittag-Leffler function is defined as
 %   E_{alpha, beta}(z) = sum k from 0 to inf of Z^k/gamma(alpha*k + beta)
 %
 %   Reference: 
@@ -37,24 +37,26 @@ function e = mittag_leffler(alpha, beta, z, rho)
     size_of_z = size(z);  % save dimensions of z.
     z = z(:);
     if alpha > 1
-        m = floor(alpha) + 1;
-        new_z = bxsfun(@(x, y)x.^(1/m)*exp(1i*2*pi*y/m), z, 0:m-1);
+        % m = floor(alpha) + 1;
+        m = floor(alpha/2) + 1 + (alpha < 2);
+        new_z = bsxfun(@(x, y)x.^(1/m)*exp(1i*2*pi*y/m), z, 0:m-1);
         e = sum(mittag_leffler(alpha/m, beta, new_z, rho/m), 2)/m; % Need rho/m?
         e = reshape(e, size_of_z);
         return
     end
     
-    q = 0.8; % How to choose q? q < 1 to ensure lower the time cost.
-    delta = q;
+    q = 1; % How to choose q? q < 1 to ensure lower the time cost.
     large = 10+5*alpha; % 10 + 5*alpha; Can be larger.
-    tol = 10^(-16);     % Used in equal compare.
+    tol = eps;     % Used in equal compare.
     integral_tol = rho; % Used in integral.
 
-    index_z_small = abs(z) <= q & abs(z) > 0;
+    index_z_small = abs(z) < q - tol & abs(z) > 0;
     index_z_large = abs(z) > large;
-    index_z_special = abs(z) > q & abs(z) <= large;
+    index_z_one = (abs(z) >= q - tol & abs(z) <= q + tol);
+    index_z_special = abs(z) > q + tol & abs(z) <= large;
     z_absz_small = z(index_z_small);
     z_absz_large = z(index_z_large);
+    z_absz_one = z(index_z_one);
     z_absz_special = z(index_z_special);
 
     e = zeros(size(z));
@@ -63,6 +65,8 @@ function e = mittag_leffler(alpha, beta, z, rho)
     % for z small
     if ~isempty(z_absz_small)
         k_zero = ceil(max(abs((1 - beta)/alpha), max(log(rho*(1-abs(z_absz_small)))./log(abs(z_absz_small)))));
+        % make sure gamma do not overflow. Also this can make k_zero small for z close to 1.
+        k_zero = min([k_zero, floor((170-beta)/alpha)]); 
         e_absz_small = sum(bsxfun(@(x,y)x.^y./gamma(beta+alpha*y), z_absz_small, 0:k_zero), 2);
         e(index_z_small) = e_absz_small;
     end
@@ -77,8 +81,25 @@ function e = mittag_leffler(alpha, beta, z, rho)
         e(index_z_large) = e_absz_large;
     end
 
+    % for z one
+    if ~isempty(z_absz_one)
+        k_zero = min([floor((170-beta)/alpha),1500]);
+        e_absz_one = sum(bsxfun(@(x,y)x.^y./gamma(beta+alpha*y), z_absz_one, 0:k_zero), 2);
+        e(index_z_one) = e_absz_one;
+    end
+    
     % for z special
     if isempty(z_absz_special)
+        e = real(e);
+        e = reshape(e, size_of_z);
+        return
+    end
+    
+    % beta is large
+    % k = max{0, (2z-beta)/alpha, (log(rho)+gammaln(beta))/ln(z)
+    if beta > 15 && alpha > 1/2
+        k_max = min([floor((170-beta)/alpha), log(realmax)/log(max(abs(z_absz_special))),1500]);
+        e(index_z_special) = sum(bsxfun(@(x,y)x.^y./gamma(beta+alpha*y), z_absz_special, 0:k_max), 2);
         e = real(e);
         e = reshape(e, size_of_z);
         return
@@ -95,18 +116,18 @@ function e = mittag_leffler(alpha, beta, z, rho)
     if beta >= 0
         r_zero = max([ 1, 2*max(abs(z_absz_special)), (-log(pi*rho/6))^alpha]);
     else
-        r_zero = max((-beta+1)^alpha, 2*max(abs(z_absz_special)),...
+        r_zero = max(max((-beta+1)^alpha, 2*max(abs(z_absz_special))),...
             (-2*log(pi*rho/(6*(-beta+2)*(-2*beta)^(-beta))))^alpha);
     end
     
     % Choose numerical integral method.
     nflag = 1;  % Use gauss.
-    if nflag == 1
+    if nflag == 0
         numerical_integral = @numerical_integral_gauss;
     else
     	numerical_integral = @numerical_integral_romberg;
     end
-    
+       
     % z_argz_gt_pi_alpha
     if isempty(z_argz_gt_pi_alpha)
         e_argz_gt_pi_alpha = z_argz_gt_pi_alpha;
@@ -114,7 +135,7 @@ function e = mittag_leffler(alpha, beta, z, rho)
         e_argz_gt_pi_alpha = ...        % (18)
             numerical_integral(@K, 0, r_zero, integral_tol, alpha, beta, z_argz_gt_pi_alpha);
     else
-        epsilon = delta/2; % How to choose epsilon in (17)?
+        epsilon = 1; % How to choose epsilon in (17)?
         e_argz_gt_pi_alpha = ...
             numerical_integral(@K, epsilon, r_zero, integral_tol, alpha, beta, z_argz_gt_pi_alpha)...
             + numerical_integral(@P, -pi*alpha, pi*alpha, integral_tol, alpha, beta, epsilon, z_argz_gt_pi_alpha);
@@ -128,16 +149,18 @@ function e = mittag_leffler(alpha, beta, z, rho)
             numerical_integral(@K, 0, r_zero, integral_tol, alpha, beta, z_argz_lt_pi_alpha)...
              + 1./alpha*z_argz_lt_pi_alpha.^((1-beta)/alpha).*exp(z_argz_lt_pi_alpha.^(1/alpha));
     else
-        epsilon = min(abs(z_argz_lt_pi_alpha))/2;
+        epsilon = min(abs(z_argz_lt_pi_alpha))/2; % + 1/2 - 1e-3;  %TODO how to choose this epsilon?
         e_argz_lt_pi_alpha = ...        % (25)
             numerical_integral(@K, epsilon, r_zero, integral_tol, alpha, beta, z_argz_lt_pi_alpha)...
-            + numerical_integral(@P, -pi*alpha, pi*alpha, integral_tol, alpha, beta, epsilon, z_argz_lt_pi_alpha);
+            + numerical_integral(@P, -pi*alpha, pi*alpha, integral_tol, alpha, beta, epsilon, z_argz_lt_pi_alpha)...
+            + 1./alpha*z_argz_lt_pi_alpha.^((1-beta)/alpha).*exp(z_argz_lt_pi_alpha.^(1/alpha));
     end
 
     % z_argz_eq_pi_alpha
     % delta to ensure condition psilon > |z| in (24)
     if ~isempty(z_argz_eq_pi_alpha)
-        epsilon = (max(abs(z_argz_eq_pi_alpha)) + delta)/2; % How to choose epsilon in (24)? 
+        % epsilon = (max(abs(z_argz_eq_pi_alpha)) + 1)/2; % How to choose epsilon in (24)? 
+        epsilon = max(abs(z_argz_eq_pi_alpha)) + 1/2;
         e_argz_eq_pi_alpha = ...
             numerical_integral(@K, epsilon, r_zero, integral_tol, alpha, beta, z_argz_eq_pi_alpha)...
             + numerical_integral(@P, -pi*alpha, pi*alpha, integral_tol, alpha, beta, epsilon, z_argz_eq_pi_alpha);
@@ -191,17 +214,19 @@ function I = numerical_integral_romberg(fun, lower, upper, tol, varargin)
         S2n = 4*T2n/3 - Tn/3;
         C2n = 16*S2n/15 - Sn/15;
         R2n = 64*C2n/63 - Cn/63;
-        if max(abs(R2n - Rn)) < tol
+        if max(abs(R2n - Rn)./abs(R2n)) < tol
             I = R2n;
             return
         else
             Tn = T2n;
             Sn = S2n;
             Cn = C2n;
+            oldRn = Rn;
             Rn = R2n;
         end
     end
     I = R2n;
+    warning('numerical_integral_romberg reached to max iteration!!! rel error = %g\n', max(abs(R2n-oldRn)./abs(R2n)))
 end
 
 function f = K(r, alpha, beta, z)
