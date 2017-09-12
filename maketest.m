@@ -15,9 +15,13 @@ function maketest(n, p)
         n = 10;
     end
     % funs = {@mittag_leffler, @mlf};
-    funs = {@mittag_leffler};
+    funs = {@mittag_leffler_wapper};
     data = make_data(n);
     make_mathematica_script(data, n, p, funs);
+end
+
+function ret = mittag_leffler_wapper(alpha, beta, z, p)
+    ret = mittag_leffler(alpha,beta,z,10^(-p));
 end
 
 function data = make_data(n)
@@ -38,10 +42,10 @@ function make_mathematica_script(data, n, p, funs)
     s = arrayfun(@matlab2math, ret, 'UniformOutput', false);
     
     fprintf(1, 'resultTable = List[\n');
-    fprintf(1, 'List[alpha, beta, z, MittagLefflerE, %s],\n', str)
+    fprintf(1, 'List[alpha, beta, z, MittagLefflerE, %s],\n', str);
     for i = 1:n
         para = sprintf('%g, %g, %g', data(i, 1), data(i, 2), data(i, 3));
-        fprintf(1, 'List[%s, MittagLefflerE[%s], %s]', para, para, strjoin(s(i,:), ','));
+        fprintf(1, 'List[%s, N[MittagLefflerE@@Rationalize[{%s},0],10], %s]', para, para, strjoin(s(i,:), ','));
         if i ~= n
             fprintf(1, ',\n');
         end

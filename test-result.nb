@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      9670,        255]
-NotebookOptionsPosition[      9161,        233]
-NotebookOutlinePosition[      9700,        254]
-CellTagsIndexPosition[      9657,        251]
+NotebookDataLength[     10383,        271]
+NotebookOptionsPosition[      9874,        249]
+NotebookOutlinePosition[     10413,        270]
+CellTagsIndexPosition[     10370,        267]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -110,25 +110,37 @@ Cell[BoxData[{
     RowBox[{"List", "[", 
      RowBox[{
       RowBox[{"List", "[", 
-       RowBox[{
-       "alpha", ",", "beta", ",", "z", ",", "MittagLefflerE", ",", 
-        "mittag_leffler"}], "]"}], ",", 
+       RowBox[{"alpha", ",", "beta", ",", "z", ",", "MittagLefflerE", ",", 
+        RowBox[{"mittag_leffler", "_wapper"}]}], "]"}], ",", 
       RowBox[{"List", "[", 
-       RowBox[{"26.22", ",", "42.24", ",", "11.74", ",", 
-        RowBox[{"MittagLefflerE", "[", 
-         RowBox[{"26.22", ",", "42.24", ",", "11.74"}], "]"}], ",", 
-        RowBox[{"1.22162", "*", 
+       RowBox[{"34.77", ",", "64.34", ",", "51.44", ",", 
+        RowBox[{"N", "[", 
+         RowBox[{
+          RowBox[{"MittagLefflerE", "@@", 
+           RowBox[{"Rationalize", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"34.77", ",", "64.34", ",", "51.44"}], "}"}], ",", 
+             "0"}], "]"}]}], ",", "10"}], "]"}], ",", 
+        RowBox[{"1.22864", "*", 
          RowBox[{"10", "^", 
-          RowBox[{"-", "50"}]}]}]}], "]"}], ",", 
+          RowBox[{"-", "88"}]}]}]}], "]"}], ",", 
       RowBox[{"List", "[", 
-       RowBox[{"60.28", ",", 
-        RowBox[{"-", "55.65"}], ",", "29.67", ",", 
-        RowBox[{"MittagLefflerE", "[", 
-         RowBox[{"60.28", ",", 
-          RowBox[{"-", "55.65"}], ",", "29.67"}], "]"}], ",", 
-        RowBox[{"4.91363", "*", 
+       RowBox[{"15", ",", 
+        RowBox[{"-", "14.02"}], ",", "88.43", ",", 
+        RowBox[{"N", "[", 
+         RowBox[{
+          RowBox[{"MittagLefflerE", "@@", 
+           RowBox[{"Rationalize", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"15", ",", 
+               RowBox[{"-", "14.02"}], ",", "88.43"}], "}"}], ",", "0"}], 
+            "]"}]}], ",", "10"}], "]"}], ",", 
+        RowBox[{
+         RowBox[{"-", "1.83818"}], "*", 
          RowBox[{"10", "^", 
-          RowBox[{"+", "73"}]}]}]}], "]"}]}], "]"}]}], ";"}], 
+          RowBox[{"+", "09"}]}]}]}], "]"}]}], "]"}]}], ";"}], 
   "\[IndentingNewLine]", 
   RowBox[{"(*", 
    RowBox[{
@@ -145,67 +157,67 @@ Cell[BoxData[{
    "Get", " ", "plain", " ", "text", " ", "result", " ", "used", " ", "in", 
     " ", "org", " ", "file"}], "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{
-   RowBox[{"result", " ", "=", " ", 
-    RowBox[{"StringJoin", "[", 
-     RowBox[{"Riffle", "[", 
-      RowBox[{
-       RowBox[{"Map", "[", 
+  RowBox[{"result", " ", "=", " ", 
+   RowBox[{"StringJoin", "[", 
+    RowBox[{"Riffle", "[", 
+     RowBox[{
+      RowBox[{"Map", "[", 
+       RowBox[{
         RowBox[{
-         RowBox[{
-          RowBox[{"StringJoin", "[", 
-           RowBox[{"\"\<|\>\"", ",", 
-            RowBox[{"Riffle", "[", 
-             RowBox[{
-              RowBox[{"Map", "[", 
+         RowBox[{"StringJoin", "[", 
+          RowBox[{"\"\<|\>\"", ",", 
+           RowBox[{"Riffle", "[", 
+            RowBox[{
+             RowBox[{"Map", "[", 
+              RowBox[{
                RowBox[{
-                RowBox[{
-                 RowBox[{"StringReplace", "[", 
-                  RowBox[{
-                   RowBox[{"myToString", "[", 
-                    RowBox[{"##", ",", "True"}], "]"}], ",", 
-                   RowBox[{"\"\<*^\>\"", "\[Rule]", "\"\<*10^\>\""}]}], "]"}],
-                  "&"}], ",", "#"}], "]"}], ",", "\"\<|\>\""}], "]"}], ",", 
-            "\"\<|\>\""}], "]"}], "&"}], ",", " ", "resultTable"}], "]"}], 
-       ",", " ", "\"\<\\n\>\""}], "]"}], "]"}]}], ";"}], 
-  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                RowBox[{"StringReplace", "[", 
+                 RowBox[{
+                  RowBox[{"myToString", "[", 
+                   RowBox[{"##", ",", "True"}], "]"}], ",", 
+                  RowBox[{"\"\<*^\>\"", "\[Rule]", "\"\<*10^\>\""}]}], "]"}], 
+                "&"}], ",", "#"}], "]"}], ",", "\"\<|\>\""}], "]"}], ",", 
+           "\"\<|\>\""}], "]"}], "&"}], ",", " ", "resultTable"}], "]"}], ",",
+       " ", "\"\<\\n\>\""}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
   RowBox[{"(*", 
    RowBox[{"Show", " ", "result", " ", "in", " ", "table"}], 
    "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{"Insert", "[", 
-  RowBox[{
-   RowBox[{"Grid", "[", 
-    RowBox[{"Map", "[", 
-     RowBox[{
+ RowBox[{
+  RowBox[{"Insert", "[", 
+   RowBox[{
+    RowBox[{"Grid", "[", 
+     RowBox[{"Map", "[", 
       RowBox[{
-       RowBox[{"Map", "[", 
-        RowBox[{
+       RowBox[{
+        RowBox[{"Map", "[", 
          RowBox[{
-          RowBox[{"myToString", "[", 
-           RowBox[{"##", ",", "False"}], "]"}], "&"}], ",", "#"}], "]"}], 
-       "&"}], ",", "resultTable"}], "]"}], "]"}], ",", 
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"Background", "\[Rule]", 
-      RowBox[{"{", 
-       RowBox[{"None", ",", 
-        RowBox[{"{", 
-         RowBox[{
-          RowBox[{"GrayLevel", "[", "0.7`", "]"}], ",", 
-          RowBox[{"{", "White", "}"}]}], "}"}]}], "}"}]}], ",", 
-     RowBox[{"Dividers", "\[Rule]", 
-      RowBox[{"{", 
-       RowBox[{"Black", ",", 
-        RowBox[{"{", 
-         RowBox[{"2", "\[Rule]", "Black"}], "}"}]}], "}"}]}], ",", 
-     RowBox[{"Frame", "\[Rule]", "True"}], ",", 
-     RowBox[{"Spacings", "\[Rule]", 
-      RowBox[{"{", 
-       RowBox[{"2", ",", 
-        RowBox[{"{", 
-         RowBox[{"2", ",", 
-          RowBox[{"{", "0.7`", "}"}], ",", "2"}], "}"}]}], "}"}]}]}], "}"}], 
-   ",", "2"}], "]"}], "\[IndentingNewLine]"}], "Input",
+          RowBox[{
+           RowBox[{"myToString", "[", 
+            RowBox[{"##", ",", "False"}], "]"}], "&"}], ",", "#"}], "]"}], 
+        "&"}], ",", "resultTable"}], "]"}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Background", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"None", ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"GrayLevel", "[", "0.7`", "]"}], ",", 
+           RowBox[{"{", "White", "}"}]}], "}"}]}], "}"}]}], ",", 
+      RowBox[{"Dividers", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"Black", ",", 
+         RowBox[{"{", 
+          RowBox[{"2", "\[Rule]", "Black"}], "}"}]}], "}"}]}], ",", 
+      RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+      RowBox[{"Spacings", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", 
+         RowBox[{"{", 
+          RowBox[{"2", ",", 
+           RowBox[{"{", "0.7`", "}"}], ",", "2"}], "}"}]}], "}"}]}]}], "}"}], 
+    ",", "2"}], "]"}], ";"}], "\[IndentingNewLine]"}], "Input",
  CellChangeTimes->{{3.7140127395246015`*^9, 3.7140129011474953`*^9}, {
    3.7140129373308573`*^9, 3.7140129407196445`*^9}, {3.71401298486134*^9, 
    3.7140129867988915`*^9}, {3.714013232421081*^9, 3.7140132565274243`*^9}, {
@@ -228,7 +240,11 @@ Cell[BoxData[{
    3.714017934475873*^9, 3.7140179349103413`*^9}, {3.7140180792699184`*^9, 
    3.7140180805216165`*^9}, {3.7140181266145625`*^9, 3.714018187068509*^9}, {
    3.714018865707037*^9, 3.7140188679917746`*^9}, {3.714018902365559*^9, 
-   3.714019102566249*^9}, {3.714019137961419*^9, 3.7140191385013194`*^9}}]
+   3.714019102566249*^9}, {3.714019137961419*^9, 3.7140191385013194`*^9}, 
+   3.7141978935379343`*^9, {3.714197937548355*^9, 3.714197945469783*^9}, {
+   3.7141979956851826`*^9, 3.714198010516946*^9}, {3.714198552554514*^9, 
+   3.714198557955654*^9}, 3.7141986478479276`*^9, {3.714198718940014*^9, 
+   3.7141987208090453`*^9}, 3.714198899472725*^9}]
 }, Open  ]]
 },
 WindowSize->{1536, 781},
@@ -255,7 +271,7 @@ CellTagsIndex->{}
 Notebook[{
 Cell[CellGroupData[{
 Cell[580, 22, 136, 1, 74, "Chapter"],
-Cell[719, 25, 8426, 205, 799, "Input"]
+Cell[719, 25, 9139, 221, 826, "Input"]
 }, Open  ]]
 }
 ]
